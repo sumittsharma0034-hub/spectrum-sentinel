@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spectrum Sentinel — Smart Scan Strategy for Electronic Warfare</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="eyebrow">SIH26055 · Software</div>
+      <h1>Spectrum Sentinel <span>— Smart Scan Strategy for Electronic Warfare</span></h1>
+    </div>
+    <div class="ps-tag">LIVE · Python backend</div>
+  </header>
+
+  <div class="grid2">
+
+    <div class="panel">
+      <h2>Simulation Controls</h2>
+
+      <div class="field">
+        <label>Frequency bands <span class="val" id="bandsVal">30</span></label>
+        <input type="range" id="bands" min="10" max="60" value="30">
+      </div>
+
+      <div class="field">
+        <label>Scan steps (time) <span class="val" id="stepsVal">400</span></label>
+        <input type="range" id="steps" min="100" max="1000" value="400">
+      </div>
+
+      <div class="field">
+        <label>Threat hotspots <span class="val" id="hotVal">4</span></label>
+        <input type="range" id="hotspots" min="1" max="10" value="4">
+      </div>
+
+      <div class="field">
+        <label>Exploration rate (ε) <span class="val" id="epsVal">0.15</span></label>
+        <input type="range" id="epsilon" min="0" max="50" value="15">
+      </div>
+
+      <button id="runBtn">▶ Run Simulation</button>
+
+      <div class="note">
+        <b style="color:var(--text)">How it works:</b> a few "hotspot" bands (marked •) are more likely to carry a signal. Sequential scans 1→2→3… blindly. Smart Adaptive scores each band from what it has found and mostly revisits high-scoring bands while still exploring others at rate ε. Both strategies run for real in <b>scan_engine.py</b> on the server.
+      </div>
+    </div>
+
+    <div class="main-col">
+
+      <div class="spectrum-row">
+        <div class="panel">
+          <div class="strategy-title">
+            <h3>Sequential Scan</h3>
+            <span class="badge old">BASELINE</span>
+          </div>
+          <div class="band-grid" id="gridOld"></div>
+          <div class="metrics-row">
+            <div class="metric old"><div class="num" id="oldDetections">—</div><div class="lbl">Threats detected</div></div>
+            <div class="metric old"><div class="num" id="oldAvgDelay">—</div><div class="lbl">Avg. detection delay</div></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="strategy-title">
+            <h3>Smart Adaptive Scan</h3>
+            <span class="badge new">PROPOSED</span>
+          </div>
+          <div class="band-grid" id="gridNew"></div>
+          <div class="metrics-row">
+            <div class="metric"><div class="num" id="newDetections">—</div><div class="lbl">Threats detected</div></div>
+            <div class="metric"><div class="num" id="newAvgDelay">—</div><div class="lbl">Avg. detection delay</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel chart-panel">
+        <h2>Cumulative Detections Over Time</h2>
+        <canvas id="chart"></canvas>
+        <div class="legend">
+          <span><i class="dot" style="background:#ff5d5d"></i>Sequential Scan</span>
+          <span><i class="dot" style="background:#5ee6a8"></i>Smart Adaptive Scan</span>
+        </div>
+      </div>
+
+      </div>              
+
+      <div class="panel alert-panel">
+        <div class="strategy-title">
+          <h2 style="margin:0">Threat Alert Feed</h2>
+          <label style="display:flex;align-items:center;gap:6px;margin:0;cursor:pointer;">
+            <input type="checkbox" id="soundToggle"> <span style="font-size:12px">Sound Alerts</span>
+          </label>
+        </div>
+        <div id="alertBanner" class="alert-banner"></div>
+        <ul id="alertLog" class="alert-log"></ul>
+      </div>
+
+      <div class="panel">
+        <h2>Result Summary</h2>
+        <div class="summary" id="summaryText">Set your parameters and click "Run Simulation" — this calls the real Python backend.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>SIMULATED SPECTRUM ENVIRONMENT — FOR DEMONSTRATION PURPOSES ONLY · NO REAL RF HARDWARE OR CLASSIFIED DATA INVOLVED</footer>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
